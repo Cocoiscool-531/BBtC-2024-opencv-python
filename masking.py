@@ -13,7 +13,7 @@ def displayImage(imgToDisplay):
     cv2.destroyAllWindows()
 
 
-imagePath = 'C:\\Users\\Tim\\Desktop\\FTC\\2024-2025 Into the Deep\\ML work\\Yellow test set for angle\\'
+imagePath = 'sample-test-images/yellow-test-set-for-angle/'
 imgName = 'center_70'
 imgType = '.jpg'
 
