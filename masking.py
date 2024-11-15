@@ -6,10 +6,35 @@ image_path = 'sample-test-images/'
 # imgName = 'center_70.jpg'
 image_name = 'IMG_20240914_105819807.jpg'
 
+# Yellow masking
+lowerb = [5, 169, 109]
+upperb = [31, 255, 255]
+
 
 def open_window():
     cv2.namedWindow('image')
     cv2.setMouseCallback('image', mouse_callback)
+
+    def get_bound_value(index: int, lower: bool):
+        bound = lowerb if lower else upperb
+        return bound[index]
+
+    def set_bound_value(index: int, lower: bool, value):
+        bound = lowerb if lower else upperb
+        bound[index] = value
+        process_image()
+
+    def create_bound_trackbar(name, index, lower):
+        cv2.createTrackbar(name, 'image',
+                           get_bound_value(index, lower), 255,
+                           lambda value: set_bound_value(index, lower, value))
+
+    create_bound_trackbar('hue_lbound', 0, True)
+    create_bound_trackbar('hue_ubound', 0, False)
+    create_bound_trackbar('sat_lbound', 1, True)
+    create_bound_trackbar('sat_ubound', 1, False)
+    create_bound_trackbar('val_lbound', 2, True)
+    create_bound_trackbar('val_ubound', 2, False)
 
 
 def bgr_to_hsv(bgr_color):
@@ -19,15 +44,14 @@ def bgr_to_hsv(bgr_color):
 
 
 def mouse_callback(event, x, y, flags, param):
-    global image
     if event == cv2.EVENT_LBUTTONDOWN:
         pass
-    elif event == cv2.EVENT_RBUTTONDOWN:
+    elif event == cv2.EVENT_LBUTTONUP:
         pass
     elif event == cv2.EVENT_MOUSEMOVE:
         pass
 
-    bgr_color = image[y, x]
+    bgr_color = original_image[y, x]
     hsv_color = bgr_to_hsv(bgr_color)
     cv2.setWindowTitle('image', f'({x},{y}) = HSV {hsv_color}')
 
@@ -36,14 +60,11 @@ def display_image(image):
     cv2.imshow('image', image)
 
 
-def process_image(image):
+def process_image():
+    image = original_image.copy()
     hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
-    # Yellow masking
-    lowerb = (5, 169, 109)
-    upperb = (31, 255, 255)
-
-    mask = cv2.inRange(hsv_image, lowerb, upperb)
+    mask = cv2.inRange(hsv_image, tuple(lowerb), tuple(upperb))
     kernel = np.ones((5, 5), np.uint8)
     mask = cv2.dilate(mask, kernel, iterations=2)
     mask = cv2.erode(mask, kernel, iterations=1)
@@ -72,13 +93,13 @@ def process_image(image):
             display_image(image)
 
 
-image = cv2.imread(image_path + image_name)  # BGR format
-height, width, channels = image.shape
+original_image = cv2.imread(image_path + image_name)  # BGR format
+height, width, channels = original_image.shape
 aspect_ratio = height / width
-image = cv2.resize(image, (1280, int(np.round(1280 * aspect_ratio, decimals=0))))
+original_image = cv2.resize(original_image, (1280, int(np.round(1280 * aspect_ratio, decimals=0))))
 
 open_window()
-process_image(image)
+process_image()
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
