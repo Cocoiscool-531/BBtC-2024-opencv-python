@@ -4,12 +4,11 @@ import numpy as np
 # imagePath = 'sample-test-images/yellow-test-set-for-angle/'
 image_path = 'sample-test-images/'
 # imgName = 'center_70.jpg'
-image_name = 'IMG_20240914_105819807.jpg'
+image_name = 'IMG_7923.JPG'
 
 # Yellow masking
 lowerb = [5, 169, 109]
 upperb = [31, 255, 255]
-
 
 def open_window():
     cv2.namedWindow('image')
