@@ -3,7 +3,10 @@ import numpy as np
 
 class Sample:
     def __init__(self, x,y,distance_from_center, color):
-        pass
+        self.x=x
+        self.y=y
+        self.distance = distance_from_center
+        self.color=color
 
 
 
@@ -111,49 +114,3 @@ process_image()
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
-# Red Masking
-# rmask1 = cv2.inRange(hsv, (166, 143, 60), (180, 240, 240))
-# rmask2 = cv2.inRange(hsv, (0, 143, 60), (3, 240, 240))
-
-# redmask = rmask1 + rmask2
-# cv2.imwrite(imagePath + imgName + '_redmask' + imgType, redmask)
-
-# Red Contour Detection
-# _, thresh = cv2.threshold(redmask, 127, 255, cv2.THRESH_BINARY)  # Threshold to get binary image
-# contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-# mask = np.zeros_like(thresh)
-# cv2.drawContours(mask, contours, -1, 255, thickness=cv2.FILLED)
-
-# kernel = np.ones((5, 5), np.uint8)  # adjust this for dialation size
-# dilated_mask = cv2.dilate(mask, kernel, iterations=1)
-
-# dilated_contours, _ = cv2.findContours(dilated_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-# min_area = 10000  # 10000 is decent
-# filtered_contours = [cnt for cnt in dilated_contours if cv2.contourArea(cnt) > min_area]
-
-# Draw the final contours on the original image or mask
-# dialtedfiltered = cv2.drawContours(src, filtered_contours, -1, (255, 0, 0), 5)
-# cv2.imwrite(f".\\image-{i}\\dialted_cntr.jpg", dialtedfiltered)
-
-# get bounding boxes
-# boxes = [cv2.boundingRect(cnt) for cnt in filtered_contours]
-# boxed = src.copy()
-# for x, y, w, h in boxes:
-#    cv2.rectangle(boxed, (x, y), (x + w, y + h), (0, 255, 0) if h / w >= 0.7 else (50, 50, 255), 20)
-# label bounding boxes with area of contour
-# for k, (x, y, w, h) in enumerate(boxes):
-#    cv2.putText(boxed, f"{int(cv2.contourArea(filtered_contours[k]))}", (x, y - 30), cv2.FONT_HERSHEY_SIMPLEX, 3,
-#                (250, 250, 180), 12)
-# cv2.imwrite(f".\\image-{i}\\bounding_boxes.jpg", boxed)
-
-# Yellow Masking
-# yellowmask = cv2.inRange(hsv, (5, 169, 109), (31, 255, 255))
-
-# cv2.imwrite(f".\\image-{i}\\yellowmask.jpg", yellowmask)
-
-# ylwapplied = cv2.bitwise_and(src, src, mask=yellowmask)
-# redapplied = cv2.bitwise_and(src, src, mask=redmask)
-# cv2.imwrite(f".\\image-{i}\\yellowmask-applied.jpg", ylwapplied)
-# cv2.imwrite(f".\\image-{i}\\redmask-applied.jpg", redapplied)
